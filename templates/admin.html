@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice de Lettre de Motivation - Puzzle Hiérarchique</title>
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --primary-dark: #0d47a1;
+            --primary-light: #42a5f5;
+            --je-color: #e3f2fd;
+            --nous-color: #fff8e1;
+            --vous-color: #f3e5f5;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #212121;
+            --text-light: #757575;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lift: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-intense: 0 12px 40px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 40px 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-bottom: 4px solid var(--primary-color);
+        }
+
+        h1 {
+            margin: 0 0 15px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .instruction {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #666;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .instruction strong {
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .puzzle-workspace {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .puzzle-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Zone de saisie enseignant */
+        #teacher-zone {
+            border: 2px dashed var(--primary-color);
+        }
+
+        #teacher-zone.hidden {
+            display: none;
+        }
+
+        #raw-text-input {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border: 2px solid #e8eaed;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        #raw-text-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: #757575;
+        }
+
+        .btn-secondary:hover {
+            background-color: #616161;
+        }
+
+        /* Zone de la lettre vide (template) */
+        #letter-template {
+            min-height: 500px;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .letter-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow-lift);
+        }
+
+        .letter-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        .template-section {
+            min-height: 140px;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px dashed #d0d0d0;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .template-section:hover {
+            border-color: #b0b0b0;
+        }
+
+        .template-section.drag-over {
+            background-color: #e3f2fd;
+            border-color: var(--primary-color);
+            border-style: solid;
+            box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.15);
+            transform: scale(1.01);
+        }
+
+        .template-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-je { background-color: #2196f3; color: white; }
+        .badge-nous { background-color: #ffc107; color: #333; }
+        .badge-vous { background-color: #9c27b0; color: white; }
+
+        .template-section.type-je { background-color: var(--je-color); }
+        .template-section.type-nous { background-color: var(--nous-color); }
+        .template-section.type-vous { background-color: var(--vous-color); }
+
+        /* Zone des blocs à déplacer */
+        #blocks-pool {
+            min-height: 200px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        #blocks-pool::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #blocks-pool::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        #blocks-pool::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .block-item {
+            background: white;
+            border-left: 4px solid var(--primary-color);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: grab;
+            transition: all 0.3s ease;
+            user-select: none;
+            border: 1px solid #e8eaed;
+        }
+
+        .block-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: var(--primary-color);
+        }
+
+        .block-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        .block-item.type-je { border-left-color: #2196f3; }
+        .block-item.type-nous { border-left-color: #ffc107; }
+        .block-item.type-vous { border-left-color: #9c27b0; }
+
+        .block-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .block-number {
+            color: #999;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .block-content {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #424242;
+        }
+
+        .btn-edit-sentences {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        .btn-edit-sentences:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-delete-block {
+            background-color: var(--error-color);
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .btn-delete-block:hover {
+            background-color: #d32f2f;
+        }
+
+        .block-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Éditeur de phrases */
+        #sentence-editor {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #sentence-editor.active {
+            display: block;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .sentence-item {
+            background: #f5f5f5;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary-color);
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .sentence-item:hover {
+            background: #e0e0e0;
+        }
+
+        .sentence-item.dragging {
+            opacity: 0.5;
+        }
+
+        .sentence-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .btn-move {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .btn-move:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Actions et résultats */
+        .actions {
+            margin-top: 20px;
+            text-align: center;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #result-display {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-top: 20px;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .success-msg { color: var(--success-color); }
+        .error-msg { color: var(--error-color); }
+
+        .empty-placeholder {
+            text-align: center;
+            color: #9e9e9e;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        /* Indicateur de progression */
+        .progress-indicator {
+            display: none;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-lift);
+            border: 1px solid #e0e0e0;
+        }
+
+        .progress-indicator.active {
+            display: block;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        .progress-stats {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📝 Exercice : Reconstruire une Lettre</h1>
+        <p class="instruction">
+            <strong>Comment jouer :</strong>
+            1️⃣ Glissez les blocs dans les bonnes sections (JE / NOUS / VOUS)<br>
+            2️⃣ Cliquez sur "Ordonner les Phrases" pour chaque bloc<br>
+            3️⃣ Vérifiez votre travail
+        </p>
+    </header>
+
+    <!-- Zone Enseignant -->
+    <div class="workspace" id="teacher-workspace">
+        <div class="card" id="teacher-zone">
+            <h2>👨‍🏫 Créer un Exercice</h2>
+            <p style="font-size: 0.95rem; color: #666; margin-bottom: 15px;">
+                Collez le texte de la lettre ci-dessous. Séparez les blocs par une ligne vide.
+            </p>
+            <textarea id="raw-text-input" placeholder="Exemple:
+
+[Vos coordonnées]
+
+Je me permets de solliciter...
+
+Nous avons constaté...
+
+Vous trouverez ci-joint..."></textarea>
+            <button class="btn" onclick="generatePuzzle()">Générer le Puzzle</button>
+        </div>
+    </div>
+
+    <!-- Zone de Puzzle - Blocs et Lettre -->
+    <div class="puzzle-workspace" id="puzzle-workspace" style="display: none;">
+        <!-- Zone des Blocs Disponibles (À GAUCHE) -->
+        <div class="card">
+            <h2>🧩 Blocs Disponibles</h2>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">
+                Glissez les blocs vers la lettre →
+            </p>
+            <div id="blocks-pool">
+                <div class="empty-placeholder">
+                    Générez un puzzle pour voir les blocs ici
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone de la Lettre à Reconstruire (À DROITE) -->
+        <div class="card letter-card">
+            <h2>✉️ Lettre à Reconstruire</h2>
+            <div id="letter-template">
+            <div class="template-section type-je" data-type="je">
+                <h3>
+                    <span class="section-badge badge-je">JE</span>
+                    Introduction
+                </h3>
+                <div class="section-content" id="section-je">
+                    <div class="empty-placeholder">Glissez les blocs JE ici</div>
+                </div>
+            </div>
+
+            <div class="template-section type-nous" data-type="nous">
+                <h3>
+                    <span class="section-badge badge-nous">NOUS</span>
+                    Collaboration
+                </h3>
+                <div class="section-content" id="section-nous">
+                    <div class="empty-placeholder">Glissez les blocs NOUS ici</div>
+                </div>
+            </div>
+
+            <div class="template-section type-vous" data-type="vous">
+                <h3>
+                    <span class="section-badge badge-vous">VOUS</span>
+                    Destinataire
+                </h3>
+                <div class="section-content" id="section-vous">
+                    <div class="empty-placeholder">Glissez les blocs VOUS ici</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicateur de progression -->
+    <div class="progress-indicator" id="progress-indicator">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="color: var(--primary-dark); font-size: 1.1rem;">📊 Progression</strong>
+            <span class="progress-stats" id="progress-stats">0 / 0 blocs placés</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="progress-text">
+            <span>Continue ! Glisse tous les blocs dans la lettre</span>
+            <span id="progress-percent">0%</span>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+        <button class="btn" onclick="verifyOrder()" id="verify-btn" disabled>✓ Vérifier l'Ordre</button>
+        <button class="btn btn-secondary" onclick="resetPuzzle()" id="reset-btn" disabled>↻ Réinitialiser</button>
+    </div>
+
+    <!-- Résultats -->
+    <div id="result-display">
+        <span id="status-text">Commencez par générer un puzzle</span>
+    </div>
+</div>
+
+<!-- Modal pour éditer les phrases -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeSentenceEditor()"></div>
+<div id="sentence-editor">
+    <h2 id="editor-title">Ordonner les Phrases</h2>
+    <div id="sentence-list"></div>
+    <div class="actions">
+        <button class="btn btn-secondary" onclick="closeSentenceEditor()">← Retour</button>
+        <button class="btn" onclick="verifySentences()">✓ Valider l'Ordre</button>
+    </div>
+</div>
+
+<script>
+    let puzzleData = null;
+    let currentEditingBlock = null;
+    let attemptsCount = 0;
+    let correctBlockOrder = [];
+
+    // Fonction pour mettre à jour l'indicateur de progression
+    function updateProgressIndicator() {
+        if (!puzzleData) return;
+
+        const totalBlocks = puzzleData.blocks.length;
+        const sections = ['je', 'nous', 'vous'];
+        let placedBlocks = 0;
+
+        sections.forEach(type => {
+            const section = document.getElementById(`section-${type}`);
+            const blocks = section.querySelectorAll('.block-item');
+            placedBlocks += blocks.length;
+        });
+
+        const percentage = Math.round((placedBlocks / totalBlocks) * 100);
+
+        // Mettre à jour les éléments
+        document.getElementById('progress-bar').style.width = percentage + '%';
+        document.getElementById('progress-stats').textContent = `${placedBlocks} / ${totalBlocks} blocs placés`;
+        document.getElementById('progress-percent').textContent = percentage + '%';
+
+        // Afficher l'indicateur si au moins un bloc est placé
+        const indicator = document.getElementById('progress-indicator');
+        if (placedBlocks > 0) {
+            indicator.classList.add('active');
+        } else {
+            indicator.classList.remove('active');
+        }
+
+        // Activer le bouton vérifier si tous les blocs sont placés
+        const verifyBtn = document.getElementById('verify-btn');
+        if (placedBlocks === totalBlocks) {
+            verifyBtn.disabled = false;
+            verifyBtn.style.animation = 'pulse 1.5s infinite';
+        } else {
+            verifyBtn.disabled = true;
+            verifyBtn.style.animation = 'none';
+        }
+    }
+
+    // Initialisation du Drag and Drop
+    function initDragAndDrop() {
+        const sections = document.querySelectorAll('.template-section');
+
+        sections.forEach(section => {
+            const content = section.querySelector('.section-content');
+
+            // Retirer les anciens événements pour éviter les doublons
+            const newContent = content.cloneNode(true);
+            content.parentNode.replaceChild(newContent, content);
+            
+            const freshContent = section.querySelector('.section-content');
+
+            freshContent.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                section.classList.add('drag-over');
+            });
+
+            freshContent.addEventListener('dragleave', () => {
+                section.classList.remove('drag-over');
+            });
+
+            freshContent.addEventListener('drop', (e) => {
+                e.preventDefault();
+                section.classList.remove('drag-over');
+
+                const blockId = e.dataTransfer.getData('text/plain');
+                const blockElement = document.querySelector(`[data-block-id="${blockId}"]`);
+
+                if (blockElement) {
+                    // Supprimer le placeholder s'il existe
+                    const placeholder = freshContent.querySelector('.empty-placeholder');
+                    if (placeholder) placeholder.remove();
+
+                    // Déplacer le bloc
+                    freshContent.appendChild(blockElement);
+                    
+                    // Afficher le bouton supprimer quand le bloc est dans une section
+                    const deleteBtn = blockElement.querySelector('.btn-delete-block');
+                    if (deleteBtn) deleteBtn.style.display = 'inline-block';
+                    
+                    // Réinitialiser le draggable du bloc
+                    makeBlockDraggable(blockElement);
+                    
+                    // Mettre à jour l'indicateur de progression
+                    updateProgressIndicator();
+                    
+                    // Ajouter une animation de succès
+                    blockElement.style.animation = 'bounceIn 0.5s';
+                    setTimeout(() => {
+                        blockElement.style.animation = '';
+                    }, 500);
+                }
+            });
+        });
+    }
+
+    function makeBlockDraggable(element) {
+        // Supprimer les anciens événements en clonant l'élément
+        const clone = element.cloneNode(true);
+        element.parentNode.replaceChild(clone, element);
+        
+        // Obtenir la référence du nouvel élément
+        const freshElement = document.querySelector(`[data-block-id="${clone.dataset.blockId}"]`);
+        freshElement.setAttribute('draggable', 'true');
+
+        freshElement.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', freshElement.dataset.blockId);
+            freshElement.classList.add('dragging');
+        });
+
+        freshElement.addEventListener('dragend', () => {
+            freshElement.classList.remove('dragging');
+        });
+        
+        return freshElement;
+    }
+
+    async function generatePuzzle() {
+        const rawText = document.getElementById('raw-text-input').value;
+
+        if (!rawText.trim()) {
+            alert('Veuillez saisir un texte !');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: rawText })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.error || 'Erreur lors du traitement');
+                return;
+            }
+
+            puzzleData = await response.json();
+            correctBlockOrder = puzzleData.original_order;
+
+            // Masquer la zone enseignant et afficher la zone puzzle
+            document.getElementById('teacher-workspace').style.display = 'none';
+            document.getElementById('puzzle-workspace').style.display = 'grid';
+
+            displayBlocks(puzzleData.blocks);
+
+            // Activer les boutons
+            document.getElementById('verify-btn').disabled = false;
+            document.getElementById('reset-btn').disabled = false;
+
+            // Réinitialiser les sections
+            ['je', 'nous', 'vous'].forEach(type => {
+                const section = document.getElementById(`section-${type}`);
+                section.innerHTML = '<div class="empty-placeholder">Glissez les blocs "' + type.toUpperCase() + '" ici</div>';
+            });
+
+            updateStatus('Puzzle généré ! Organisez les blocs dans la lettre.');
+
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur de connexion au serveur');
+        }
+    }
+
+    function displayBlocks(blocks) {
+        const pool = document.getElementById('blocks-pool');
+        pool.innerHTML = '';
+
+        blocks.forEach(block => {
+            const blockDiv = document.createElement('div');
+            blockDiv.className = `block-item type-${block.type}`;
+            blockDiv.dataset.blockId = block.id;
+            blockDiv.dataset.blockType = block.type;
+
+            // Afficher les phrases mélangées au lieu du texte complet
+            const shuffledText = block.sentences.map(s => s.text).join(' ');
+
+            blockDiv.innerHTML = `
+                <div class="block-header">
+                    <span class="block-number">📦 Bloc #${block.id}</span>
+                </div>
+                <div class="block-content">${shuffledText}</div>
+                <div class="block-actions">
+                    <button class="btn-edit-sentences" onclick="openSentenceEditor(${block.id})">
+                        ✏️ Ordonner les Phrases
+                    </button>
+                    <button class="btn-delete-block" onclick="deleteBlock(${block.id})" style="display: none;">
+                        🗑️ Retirer
+                    </button>
+                </div>
+            `;
+
+            pool.appendChild(blockDiv);
+            makeBlockDraggable(blockDiv);
+        });
+
+        initDragAndDrop();
+    }
+
+    function openSentenceEditor(blockId) {
+        const block = puzzleData.blocks.find(b => b.id === blockId);
+        if (!block) return;
+
+        currentEditingBlock = block;
+
+        document.getElementById('editor-title').textContent = `Ordonner les Phrases - Bloc #${blockId}`;
+
+        const sentenceList = document.getElementById('sentence-list');
+        sentenceList.innerHTML = '';
+
+        block.sentences.forEach((sentence, index) => {
+            const sentenceDiv = document.createElement('div');
+            sentenceDiv.className = 'sentence-item';
+            sentenceDiv.dataset.sentenceId = sentence.id;
+            sentenceDiv.setAttribute('draggable', 'true');
+
+            sentenceDiv.innerHTML = `
+                <div>${sentence.text}</div>
+                <div class="sentence-controls">
+                    <button class="btn-move" onclick="moveSentence(${index}, -1)">▲</button>
+                    <button class="btn-move" onclick="moveSentence(${index}, 1)">▼</button>
+                </div>
+            `;
+
+            sentenceList.appendChild(sentenceDiv);
+        });
+
+        // Activer le drag & drop pour les phrases
+        initSentenceDragDrop();
+
+        document.getElementById('modal-overlay').classList.add('active');
+        document.getElementById('sentence-editor').classList.add('active');
+    }
+
+    function initSentenceDragDrop() {
+        const sentenceList = document.getElementById('sentence-list');
+        let draggedSentence = null;
+
+        sentenceList.querySelectorAll('.sentence-item').forEach(item => {
+            item.addEventListener('dragstart', function() {
+                draggedSentence = this;
+                this.classList.add('dragging');
+            });
+
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                if (draggedSentence !== this) {
+                    const rect = this.getBoundingClientRect();
+                    const midpoint = rect.top + rect.height / 2;
+
+                    if (e.clientY < midpoint) {
+                        this.parentNode.insertBefore(draggedSentence, this);
+                    } else {
+                        this.parentNode.insertBefore(draggedSentence, this.nextSibling);
+                    }
+                }
+            });
+        });
+    }
+
+    function moveSentence(index, direction) {
+        const sentences = currentEditingBlock.sentences;
+        const newIndex = index + direction;
+
+        if (newIndex < 0 || newIndex >= sentences.length) return;
+
+        // Échanger les éléments
+        [sentences[index], sentences[newIndex]] = [sentences[newIndex], sentences[index]];
+
+        // Réafficher
+        openSentenceEditor(currentEditingBlock.id);
+    }
+
+    function closeSentenceEditor() {
+        document.getElementById('modal-overlay').classList.remove('active');
+        document.getElementById('sentence-editor').classList.remove('active');
+        currentEditingBlock = null;
+    }
+
+    function deleteBlock(blockId) {
+        const blockElement = document.querySelector(`[data-block-id="${blockId}"]`);
+        if (!blockElement) return;
+
+        // Remettre le bloc dans la pool
+        const pool = document.getElementById('blocks-pool');
+        pool.appendChild(blockElement);
+
+        // Masquer le bouton supprimer
+        const deleteBtn = blockElement.querySelector('.btn-delete-block');
+        if (deleteBtn) deleteBtn.style.display = 'none';
+        
+        // Réinitialiser le draggable
+        makeBlockDraggable(blockElement);
+
+        // Vérifier s'il faut remettre le placeholder dans la section d'origine
+        const sections = ['je', 'nous', 'vous'];
+        sections.forEach(type => {
+            const section = document.getElementById(`section-${type}`);
+            const blocks = section.querySelectorAll('.block-item');
+            if (blocks.length === 0) {
+                section.innerHTML = '<div class="empty-placeholder">Glissez les blocs ' + type.toUpperCase() + ' ici</div>';
+            }
+        });
+        
+        // Mettre à jour l'indicateur de progression
+        updateProgressIndicator();
+    }
+
+    function verifySentences() {
+        if (!currentEditingBlock) return;
+
+        // Récupérer l'ordre actuel des phrases
+        const sentenceItems = document.querySelectorAll('#sentence-list .sentence-item');
+        const currentOrder = Array.from(sentenceItems).map(item =>
+            parseInt(item.dataset.sentenceId)
+        );
+
+        // Vérifier si l'ordre est correct (1, 2, 3, ...)
+        const isCorrect = currentOrder.every((id, index) => id === index + 1);
+
+        if (isCorrect) {
+            alert('✅ Phrases correctement ordonnées !');
+            currentEditingBlock.sentencesCorrect = true;
+            closeSentenceEditor();
+        } else {
+            alert('❌ L\'ordre des phrases n\'est pas correct. Réessayez !');
+        }
+    }
+
+    async function verifyOrder() {
+        attemptsCount++;
+
+        // Récupérer l'ordre actuel des blocs dans les sections
+        const sections = ['je', 'nous', 'vous'];
+        let currentBlocks = [];
+
+        sections.forEach(type => {
+            const section = document.getElementById(`section-${type}`);
+            const blocks = section.querySelectorAll('.block-item');
+            blocks.forEach(block => {
+                currentBlocks.push({
+                    id: parseInt(block.dataset.blockId),
+                    type: type
+                });
+            });
+        });
+
+        // Vérifier si tous les blocs sont placés
+        if (currentBlocks.length !== puzzleData.blocks.length) {
+            updateStatus('❌ Vous devez placer tous les blocs dans la lettre !', 'error');
+            return;
+        }
+
+        // Vérifier l'ordre
+        const currentOrder = currentBlocks.map(b => b.id);
+        const isCorrect = JSON.stringify(currentOrder) === JSON.stringify(correctBlockOrder);
+
+        if (isCorrect) {
+            updateStatus(`🎉 Félicitations ! Ordre correct en ${attemptsCount} tentative(s) !`, 'success');
+        } else {
+            const correctCount = currentOrder.filter((id, idx) => id === correctBlockOrder[idx]).length;
+            updateStatus(`❌ Ordre incorrect. ${correctCount}/${correctBlockOrder.length} blocs bien placés.`, 'error');
+        }
+    }
+
+    function resetPuzzle() {
+        if (confirm('Voulez-vous vraiment réinitialiser le puzzle ?')) {
+            // Réafficher la zone enseignant
+            document.getElementById('teacher-workspace').style.display = 'grid';
+            document.getElementById('puzzle-workspace').style.display = 'none';
+
+            // Réinitialiser les données
+            puzzleData = null;
+            correctBlockOrder = [];
+            attemptsCount = 0;
+
+            // Désactiver les boutons
+            document.getElementById('verify-btn').disabled = true;
+            document.getElementById('reset-btn').disabled = true;
+
+            updateStatus('Commencez par générer un puzzle');
+        }
+    }
+
+    function updateStatus(message, type = 'info') {
+        const display = document.getElementById('result-display');
+        const statusText = document.getElementById('status-text');
+
+        if (statusText) {
+            statusText.textContent = message;
+            statusText.className = type === 'success' ? 'success-msg' : (type === 'error' ? 'error-msg' : '');
+        } else {
+            display.innerHTML = `<span id="status-text" class="${type === 'success' ? 'success-msg' : (type === 'error' ? 'error-msg' : '')}">${message}</span>`;
+        }
+    }
+
+    // Initialisation
+    initDragAndDrop();
+</script>
+
+</body>
+</html>
+

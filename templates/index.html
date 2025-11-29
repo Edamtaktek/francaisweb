@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice de Lettre de Motivation</title>
+    <style>
+        :root {
+            --background-color: #f0f2f5;
+            --main-color: #ffffff;
+            --accent-color: #4a90e2;
+            --text-color: #333333;
+            --border-color: #d9d9d9;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --accent-soft: #e3f2fd;
+            --accent-strong: #357abd;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1, h2 {
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .admin-panel {
+            background-color: var(--main-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-family: var(--font-family);
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--accent-strong);
+            transform: translateY(-1px);
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .letter-container, .phrases-container {
+            background-color: var(--main-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .letter-container {
+            order: 1;
+        }
+
+        .phrases-container {
+            order: 2;
+        }
+
+        .letter-scaffold {
+            border: 2px dashed var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .scaffold-block {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: #fafafa;
+        }
+
+        .scaffold-block h3 {
+            margin: 0 0 10px 0;
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+
+        .drop-zone {
+            min-height: 90px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 12px;
+            border: 2px dashed transparent;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .drop-zone.drag-over {
+            background-color: #e6f7ff;
+            border-color: var(--accent-color);
+        }
+
+        .draggable-block {
+            background-color: var(--accent-soft);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            cursor: grab;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            border: 1px solid #bbdefb;
+        }
+
+        .draggable-block:hover {
+            background-color: #d1eafd;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .draggable-block.dragging {
+            opacity: 0.5;
+            transform: scale(1.02);
+        }
+
+        .sentence {
+            background-color: #fff;
+            padding: 8px;
+            margin: 6px 0;
+            border-radius: 4px;
+            border: 1px solid #eee;
+            cursor: grab;
+        }
+
+        .phrases-container h2 {
+            margin-bottom: 15px;
+        }
+
+        .phrases-pool {
+            min-height: 100px;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Exercice de Lettre de Motivation</h1>
+
+    <div class="admin-panel">
+        <h2>Zone Enseignant</h2>
+        <textarea id="letter-input" placeholder="Collez la lettre ici. Séparez les blocs par une ligne vide."></textarea>
+        <div class="cta-row">
+            <button id="process-btn">Générer l'exercice</button>
+            <button id="reset-btn" type="button">Réinitialiser</button>
+        </div>
+        <p id="status-message"></p>
+    </div>
+
+    <div class="container">
+        <div class="letter-container">
+            <h2>Votre Lettre</h2>
+            <div class="letter-scaffold">
+                <div class="scaffold-block">
+                    <h3>Introduction (Je)</h3>
+                    <div id="je-drop-zone" class="drop-zone" data-type="je"></div>
+                </div>
+                <div class="scaffold-block">
+                    <h3>Développement (Nous)</h3>
+                    <div id="nous-drop-zone" class="drop-zone" data-type="nous"></div>
+                </div>
+                <div class="scaffold-block">
+                    <h3>Conclusion (Vous)</h3>
+                    <div id="vous-drop-zone" class="drop-zone" data-type="vous"></div>
+                </div>
+            </div>
+            <button id="verify-btn">Vérifier l'ordre</button>
+        </div>
+
+        <div class="phrases-container">
+            <h2>Blocs à organiser</h2>
+            <div id="phrases-pool" class="phrases-pool"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const processBtn = document.getElementById('process-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const letterInput = document.getElementById('letter-input');
+            const phrasesPool = document.getElementById('phrases-pool');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const verifyBtn = document.getElementById('verify-btn');
+            const statusMessage = document.getElementById('status-message');
+
+            let originalBlocks = [];
+
+            function setStatus(message, isError = false) {
+                statusMessage.textContent = message;
+                statusMessage.style.color = isError ? 'red' : 'green';
+            }
+
+            processBtn.addEventListener('click', () => {
+                const text = letterInput.value.trim();
+                if (!text) {
+                    setStatus('Veuillez coller un texte de lettre.', true);
+                    return;
+                }
+
+                fetch('/api/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        setStatus(data.error, true);
+                        return;
+                    }
+                    originalBlocks = data.blocks;
+                    renderShuffledBlocks(data.shuffled_blocks);
+                    clearDropZones();
+                    setStatus('Exercice prêt ! Glissez-déposez les blocs.');
+                })
+                .catch(() => setStatus('Erreur serveur, réessayez.', true));
+            });
+
+            resetBtn.addEventListener('click', () => {
+                letterInput.value = '';
+                originalBlocks = [];
+                phrasesPool.innerHTML = '';
+                clearDropZones();
+                setStatus('Formulaire réinitialisé.');
+            });
+
+            function clearDropZones() {
+                dropZones.forEach(zone => zone.innerHTML = '');
+            }
+
+            function renderShuffledBlocks(blocks) {
+                phrasesPool.innerHTML = '';
+                blocks.forEach(block => {
+                    const blockElement = document.createElement('div');
+                    blockElement.className = 'draggable-block';
+                    blockElement.dataset.blockId = block.id;
+                    blockElement.draggable = true;
+
+                    const sentencesList = document.createElement('div');
+                    sentencesList.className = 'sentences-list';
+
+                    block.sentences.forEach(sentence => {
+                        const sentenceEl = document.createElement('div');
+                        sentenceEl.className = 'sentence';
+                        sentenceEl.textContent = sentence.text;
+                        sentenceEl.dataset.sentenceId = sentence.id;
+                        sentenceEl.draggable = true;
+                        sentencesList.appendChild(sentenceEl);
+                    });
+
+                    blockElement.appendChild(sentencesList);
+                    phrasesPool.appendChild(blockElement);
+                });
+                initializeDragAndDrop();
+            }
+
+            function initializeDragAndDrop() {
+                const blocks = document.querySelectorAll('.draggable-block');
+                const sentences = document.querySelectorAll('.sentence');
+
+                blocks.forEach(block => {
+                    block.addEventListener('dragstart', e => {
+                        if (e.target.classList.contains('sentence')) return;
+                        e.dataTransfer.setData('text/plain', block.dataset.blockId);
+                        setTimeout(() => block.classList.add('dragging'), 0);
+                    });
+
+                    block.addEventListener('dragend', () => block.classList.remove('dragging'));
+                });
+
+                dropZones.forEach(zone => {
+                    zone.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        zone.classList.add('drag-over');
+                    });
+
+                    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+
+                    zone.addEventListener('drop', e => {
+                        e.preventDefault();
+                        zone.classList.remove('drag-over');
+                        const blockId = e.dataTransfer.getData('text/plain');
+                        const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
+                        if (!block) return;
+
+                        const existingBlock = zone.querySelector('.draggable-block');
+                        if (existingBlock) phrasesPool.appendChild(existingBlock);
+
+                        zone.appendChild(block);
+                    });
+                });
+
+                phrasesPool.addEventListener('dragover', e => {
+                    e.preventDefault();
+                });
+
+                phrasesPool.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const blockId = e.dataTransfer.getData('text/plain');
+                    const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
+                    if (block) phrasesPool.appendChild(block);
+                });
+
+                sentences.forEach(sentence => {
+                    sentence.addEventListener('dragstart', e => {
+                        e.dataTransfer.setData('sentence-id', sentence.dataset.sentenceId);
+                        e.dataTransfer.setData('source-block-id', sentence.closest('.draggable-block').dataset.blockId);
+                        setTimeout(() => sentence.classList.add('dragging'), 0);
+                    });
+
+                    sentence.addEventListener('dragend', () => sentence.classList.remove('dragging'));
+                });
+
+                document.querySelectorAll('.sentences-list').forEach(list => {
+                    list.addEventListener('dragover', e => e.preventDefault());
+                    list.addEventListener('drop', e => {
+                        e.preventDefault();
+                        const sentenceId = e.dataTransfer.getData('sentence-id');
+                        const sourceBlockId = e.dataTransfer.getData('source-block-id');
+                        const draggedSentence = document.querySelector(`.sentence[data-sentence-id="${sentenceId}"]`);
+                        if (!draggedSentence) return;
+
+                        const targetBlockId = list.closest('.draggable-block').dataset.blockId;
+                        if (sourceBlockId !== targetBlockId) {
+                            setStatus('Déplacez les phrases uniquement dans leur bloc.', true);
+                            return;
+                        }
+
+                        const afterElement = getDragAfterElement(list, e.clientY);
+                        if (!afterElement) {
+                            list.appendChild(draggedSentence);
+                        } else {
+                            list.insertBefore(draggedSentence, afterElement);
+                        }
+                    });
+                });
+            }
+
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.sentence:not(.dragging)')];
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset, element: child };
+                    }
+                    return closest;
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+
+            verifyBtn.addEventListener('click', () => {
+                if (!originalBlocks.length) {
+                    setStatus('Générez un exercice avant de vérifier.', true);
+                    return;
+                }
+
+                const currentBlocks = [
+                    ...document.querySelectorAll('.drop-zone .draggable-block')
+                ].map(block => ({
+                    id: parseInt(block.dataset.blockId),
+                    sentences: [...block.querySelectorAll('.sentence')].map(sentence => ({
+                        id: sentence.dataset.sentenceId,
+                        text: sentence.textContent
+                    }))
+                }));
+
+                fetch('/api/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        blocks: currentBlocks,
+                        original_blocks: originalBlocks
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        setStatus(data.error, true);
+                        return;
+                    }
+                    setStatus(`Blocs corrects: ${data.correct_blocks}/${data.total_blocks} | Ordres des phrases corrects: ${data.correct_sentence_orders}`);
+                })
+                .catch(() => setStatus('Erreur pendant la vérification.', true));
+            });
+        });
+    </script>
+</body>
+</html>
+

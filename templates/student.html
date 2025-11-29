@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étudiant - Exercice de Lettre</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --secondary: #95a5a6;
+            --success: #27ae60;
+            --info: #3498db;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: var(--white);
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .navbar-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-info {
+            background: #e3f2fd;
+            color: var(--info);
+        }
+
+        .letter-scaffold {
+            background: #f8f9fa;
+            border: 2px dashed var(--light);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .scaffold-block {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid var(--light);
+        }
+
+        .scaffold-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .scaffold-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .scaffold-header h3 {
+            font-size: 16px;
+            color: var(--dark);
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .type-badge {
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .type-je {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .type-nous {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .type-vous {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .drop-zone {
+            min-height: 120px;
+            background: #fafafa;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .drop-zone.drag-over {
+            background: #e3f2fd;
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        .drop-zone:empty::before {
+            content: '📥 Glissez un bloc ici';
+            display: block;
+            text-align: center;
+            color: var(--secondary);
+            font-size: 14px;
+            padding: 40px 0;
+        }
+
+        .blocks-pool {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .draggable-block {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid #90caf9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .draggable-block:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .draggable-block:active {
+            cursor: grabbing;
+        }
+
+        .draggable-block.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .sentence {
+            background: white;
+            padding: 10px 12px;
+            margin: 6px 0;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            cursor: grab;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sentence:hover {
+            background: #f5f5f5;
+            border-color: var(--primary);
+        }
+
+        .sentence-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .sentence-text {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid var(--info);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid var(--light);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-state-text {
+            font-size: 15px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="navbar-icon">👨‍🎓</div>
+            <span>Espace Étudiant</span>
+        </div>
+        <a href="/" class="btn-back">← Retour</a>
+    </nav>
+
+    <div class="container">
+        <div id="no-exercise" class="card empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h2 class="empty-state-title">Aucun exercice disponible</h2>
+            <p class="empty-state-text">Le professeur n'a pas encore créé d'exercice. Veuillez patienter.</p>
+            <button class="btn btn-primary" onclick="loadExercise()" style="margin-top: 20px;">
+                <span>🔄</span>
+                <span>Recharger</span>
+            </button>
+        </div>
+
+        <div id="exercise-content" style="display: none;">
+            <div class="main-grid">
+                <!-- Letter Construction Area -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">📝</div>
+                            <h2 class="card-title">Votre Lettre</h2>
+                        </div>
+                    </div>
+
+                    <div class="letter-scaffold">
+                        <div class="scaffold-block">
+                            <div class="scaffold-header">
+                                <h3>Introduction</h3>
+                                <span class="type-badge type-je">Je</span>
+                            </div>
+                            <div id="je-drop-zone" class="drop-zone" data-type="je"></div>
+                        </div>
+
+                        <div class="scaffold-block">
+                            <div class="scaffold-header">
+                                <h3>Développement</h3>
+                                <span class="type-badge type-nous">Nous</span>
+                            </div>
+                            <div id="nous-drop-zone" class="drop-zone" data-type="nous"></div>
+                        </div>
+
+                        <div class="scaffold-block">
+                            <div class="scaffold-header">
+                                <h3>Conclusion</h3>
+                                <span class="type-badge type-vous">Vous</span>
+                            </div>
+                            <div id="vous-drop-zone" class="drop-zone" data-type="vous"></div>
+                        </div>
+                    </div>
+
+                    <div class="action-bar">
+                        <button class="btn btn-success" onclick="verifyAnswer()">
+                            <span>✓</span>
+                            <span>Vérifier</span>
+                        </button>
+                        <button class="btn btn-warning" onclick="resetExercise()">
+                            <span>↺</span>
+                            <span>Recommencer</span>
+                        </button>
+                    </div>
+
+                    <div class="alert alert-success" id="success-alert"></div>
+                    <div class="alert alert-warning" id="warning-alert"></div>
+                    <div class="alert alert-error" id="error-alert"></div>
+                    <div class="alert alert-info" id="info-alert"></div>
+                </div>
+
+                <!-- Blocks Pool -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <div class="card-icon">📦</div>
+                            <h2 class="card-title">Blocs à Organiser</h2>
+                        </div>
+                        <span class="badge badge-info" id="blocks-count">0 blocs</span>
+                    </div>
+                    <div id="blocks-pool" class="blocks-pool"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p style="color: var(--dark); font-weight: 600;">Chargement...</p>
+        </div>
+    </div>
+
+    <script>
+        let exerciseData = null;
+
+        // Load exercise on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadExercise();
+        });
+
+        async function loadExercise() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.style.display = 'flex';
+
+            try {
+                const response = await fetch('/api/get-exercise');
+                const data = await response.json();
+
+                if (data.error || !data.available) {
+                    showNoExercise();
+                } else {
+                    exerciseData = data;
+                    renderExercise(data.shuffled_blocks);
+                    showExerciseContent();
+                }
+            } catch (error) {
+                showNoExercise();
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function showNoExercise() {
+            document.getElementById('no-exercise').style.display = 'block';
+            document.getElementById('exercise-content').style.display = 'none';
+        }
+
+        function showExerciseContent() {
+            document.getElementById('no-exercise').style.display = 'none';
+            document.getElementById('exercise-content').style.display = 'block';
+        }
+
+        function renderExercise(blocks) {
+            const blocksPool = document.getElementById('blocks-pool');
+            const blocksCount = document.getElementById('blocks-count');
+
+            blocksPool.innerHTML = '';
+            blocksCount.textContent = `${blocks.length} blocs`;
+
+            blocks.forEach(block => {
+                const blockElement = document.createElement('div');
+                blockElement.className = 'draggable-block';
+                blockElement.dataset.blockId = block.id;
+                blockElement.dataset.blockType = block.type;
+                blockElement.draggable = true;
+
+                block.sentences.forEach((sentence, index) => {
+                    const sentenceEl = document.createElement('div');
+                    sentenceEl.className = 'sentence';
+                    sentenceEl.dataset.sentenceId = sentence.id;
+                    sentenceEl.draggable = true;
+
+                    const numberEl = document.createElement('div');
+                    numberEl.className = 'sentence-number';
+                    numberEl.textContent = index + 1;
+
+                    const textEl = document.createElement('div');
+                    textEl.className = 'sentence-text';
+                    textEl.textContent = sentence.text;
+
+                    sentenceEl.appendChild(numberEl);
+                    sentenceEl.appendChild(textEl);
+                    blockElement.appendChild(sentenceEl);
+                });
+
+                blocksPool.appendChild(blockElement);
+            });
+
+            initializeDragAndDrop();
+        }
+
+        function initializeDragAndDrop() {
+            const blocks = document.querySelectorAll('.draggable-block');
+            const sentences = document.querySelectorAll('.sentence');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const blocksPool = document.getElementById('blocks-pool');
+
+            // Block drag and drop
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('sentence')) return;
+                    e.dataTransfer.setData('blockId', block.dataset.blockId);
+                    setTimeout(() => block.classList.add('dragging'), 0);
+                });
+
+                block.addEventListener('dragend', () => {
+                    block.classList.remove('dragging');
+                });
+            });
+
+            // Drop zones
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+
+                    const blockId = e.dataTransfer.getData('blockId');
+                    const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
+
+                    if (block) {
+                        // If zone has a block, return it to pool
+                        const existingBlock = zone.querySelector('.draggable-block');
+                        if (existingBlock) {
+                            blocksPool.appendChild(existingBlock);
+                        }
+                        zone.appendChild(block);
+                        updateSentenceNumbers();
+                    }
+                });
+            });
+
+            // Pool drop zone
+            blocksPool.addEventListener('dragover', (e) => e.preventDefault());
+            blocksPool.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const blockId = e.dataTransfer.getData('blockId');
+                const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
+                if (block) {
+                    blocksPool.appendChild(block);
+                    updateSentenceNumbers();
+                }
+            });
+
+            // Sentence drag and drop within blocks
+            sentences.forEach(sentence => {
+                sentence.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('sentenceId', sentence.dataset.sentenceId);
+                    e.dataTransfer.setData('sourceBlockId', sentence.closest('.draggable-block').dataset.blockId);
+                    e.stopPropagation();
+                    setTimeout(() => sentence.classList.add('dragging'), 0);
+                });
+
+                sentence.addEventListener('dragend', () => {
+                    sentence.classList.remove('dragging');
+                });
+            });
+
+            // Enable sentence reordering within blocks
+            blocks.forEach(block => {
+                block.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(block, e.clientY);
+                    const dragging = document.querySelector('.sentence.dragging');
+                    if (dragging && dragging.closest('.draggable-block') === block) {
+                        if (afterElement == null) {
+                            block.appendChild(dragging);
+                        } else {
+                            block.insertBefore(dragging, afterElement);
+                        }
+                    }
+                });
+
+                block.addEventListener('drop', (e) => {
+                    e.stopPropagation();
+                    updateSentenceNumbers();
+                });
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sentence:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function updateSentenceNumbers() {
+            document.querySelectorAll('.draggable-block').forEach(block => {
+                const sentences = block.querySelectorAll('.sentence');
+                sentences.forEach((sentence, index) => {
+                    const numberEl = sentence.querySelector('.sentence-number');
+                    if (numberEl) {
+                        numberEl.textContent = index + 1;
+                    }
+                });
+            });
+        }
+
+        async function verifyAnswer() {
+            hideAllAlerts();
+
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const submittedBlocks = [];
+
+            dropZones.forEach(zone => {
+                const block = zone.querySelector('.draggable-block');
+                if (block) {
+                    const sentences = [...block.querySelectorAll('.sentence')].map(s => ({
+                        id: s.dataset.sentenceId,
+                        text: s.querySelector('.sentence-text').textContent
+                    }));
+
+                    submittedBlocks.push({
+                        id: parseInt(block.dataset.blockId),
+                        type: block.dataset.blockType,
+                        sentences: sentences
+                    });
+                }
+            });
+
+            if (submittedBlocks.length === 0) {
+                showAlert('error', '❌ Placez au moins un bloc avant de vérifier !');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ blocks: submittedBlocks })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showAlert('error', `❌ ${data.error}`);
+                } else if (data.all_correct) {
+                    showAlert('success', `🎉 Parfait ! Tous les blocs sont correctement placés et toutes les phrases sont dans le bon ordre !`);
+                } else {
+                    showAlert('warning', `📊 Résultat : ${data.correct_blocks}/${data.total_blocks} blocs bien placés | ${data.correct_sentence_orders}/${data.total_blocks} ordres de phrases corrects`);
+                }
+            } catch (error) {
+                showAlert('error', '❌ Erreur de connexion au serveur.');
+            }
+        }
+
+        function resetExercise() {
+            if (confirm('Voulez-vous vraiment recommencer l\'exercice ?')) {
+                loadExercise();
+                hideAllAlerts();
+            }
+        }
+
+        function showAlert(type, message) {
+            const alert = document.getElementById(`${type}-alert`);
+            alert.textContent = message;
+            alert.style.display = 'block';
+            alert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideAllAlerts() {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
+

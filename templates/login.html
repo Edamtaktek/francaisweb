@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Exercice de Lettre</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--dark);
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .role-selection {
+            display: grid;
+            gap: 20px;
+        }
+
+        .role-card {
+            padding: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: var(--white);
+        }
+
+        .role-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2);
+        }
+
+        .role-card.professor:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.2);
+        }
+
+        .role-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+        }
+
+        .role-card.professor .role-icon {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .role-card.student .role-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .role-card h2 {
+            color: var(--dark);
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .role-card p {
+            color: var(--secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-icon">📝</div>
+            <h1>Exercice de Lettre</h1>
+            <p class="subtitle">Choisissez votre rôle pour commencer</p>
+        </div>
+
+        <div class="role-selection">
+            <div class="role-card professor" onclick="selectRole('professor')">
+                <div class="role-icon">👨‍🏫</div>
+                <h2>Professeur</h2>
+                <p>Créez et gérez les exercices de lettre pour vos étudiants</p>
+            </div>
+
+            <div class="role-card student" onclick="selectRole('student')">
+                <div class="role-icon">👨‍🎓</div>
+                <h2>Étudiant</h2>
+                <p>Réalisez l'exercice en organisant les blocs et phrases de la lettre</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 - Application pédagogique</p>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            // Add animation before redirect
+            const cards = document.querySelectorAll('.role-card');
+            cards.forEach(card => {
+                if (card.classList.contains(role)) {
+                    card.style.transform = 'scale(0.95)';
+                }
+            });
+
+            // Redirect after short delay
+            setTimeout(() => {
+                window.location.href = `/${role}`;
+            }, 200);
+        }
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') selectRole('professor');
+            if (e.key === '2') selectRole('student');
+        });
+    </script>
+</body>
+</html>
+
