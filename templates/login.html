@@ -322,6 +322,20 @@
             <p class="error-message" id="error-message">Veuillez entrer un surnom</p>
         </div>
 
+        <!-- Admin Password Section (hidden by default) -->
+        <div class="nickname-section" id="admin-password-section" style="display: none;">
+            <label>Mot de passe Admin</label>
+            <input 
+                type="password" 
+                id="admin-password" 
+                class="nickname-input" 
+                placeholder="Entrez le mot de passe..."
+                maxlength="50"
+                autocomplete="off"
+            >
+            <p class="error-message" id="password-error-message">Mot de passe incorrect</p>
+        </div>
+
         <div class="role-selection">
             <div class="role-card professor" onclick="selectRole('professor')" id="professor-card">
                 <div class="role-icon">👨‍🏫</div>
@@ -360,9 +374,17 @@
                 card.classList.remove('selected');
             });
             document.getElementById(role + '-card').classList.add('selected');
+            
+            // Show/hide admin password field
+            const adminPasswordSection = document.getElementById('admin-password-section');
+            if (role === 'professor') {
+                adminPasswordSection.style.display = 'block';
+            } else {
+                adminPasswordSection.style.display = 'none';
+            }
         }
 
-        function joinSession() {
+        async function joinSession() {
             const nickname = document.getElementById('nickname').value.trim();
             const nicknameInput = document.getElementById('nickname');
             const errorMessage = document.getElementById('error-message');
@@ -382,6 +404,40 @@
             // Hide error
             errorMessage.classList.remove('visible');
             nicknameInput.classList.remove('error');
+
+            // Validate admin password if professor role selected (server-side)
+            if (selectedRole === 'professor') {
+                const adminPassword = document.getElementById('admin-password').value;
+                const passwordInput = document.getElementById('admin-password');
+                const passwordError = document.getElementById('password-error-message');
+                
+                try {
+                    const response = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: adminPassword })
+                    });
+                    
+                    if (!response.ok) {
+                        passwordInput.classList.add('error');
+                        passwordError.classList.add('visible');
+                        
+                        setTimeout(() => {
+                            passwordInput.classList.remove('error');
+                        }, 400);
+                        return;
+                    }
+                    
+                    // Hide password error
+                    passwordError.classList.remove('visible');
+                    passwordInput.classList.remove('error');
+                } catch (error) {
+                    passwordInput.classList.add('error');
+                    passwordError.textContent = 'Erreur de connexion au serveur';
+                    passwordError.classList.add('visible');
+                    return;
+                }
+            }
 
             // Store nickname in session storage
             sessionStorage.setItem('nickname', nickname);
@@ -403,11 +459,24 @@
                 joinSession();
             }
         });
+        
+        // Handle Enter key for password field
+        document.getElementById('admin-password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                joinSession();
+            }
+        });
 
         // Clear error on input
         document.getElementById('nickname').addEventListener('input', () => {
             document.getElementById('error-message').classList.remove('visible');
             document.getElementById('nickname').classList.remove('error');
+        });
+        
+        // Clear password error on input
+        document.getElementById('admin-password').addEventListener('input', () => {
+            document.getElementById('password-error-message').classList.remove('visible');
+            document.getElementById('admin-password').classList.remove('error');
         });
 
         // Keyboard shortcuts

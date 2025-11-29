@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import random
 import re
+import time
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 
@@ -99,6 +100,14 @@ current_exercise = {
     'shuffled_blocks': []
 }
 
+# In-memory storage for student scores and timer
+student_scores = {}  # {nickname: {'score': int, 'time_taken': float, 'completed_at': timestamp}}
+timer_config = {
+    'duration': 300,  # Default 5 minutes in seconds
+    'started_at': None,
+    'is_active': False
+}
+
 
 @app.route('/')
 def index():
@@ -108,6 +117,19 @@ def index():
 @app.route('/professor')
 def professor():
     return render_template('professor.html')
+
+
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    """Validate admin password"""
+    data = request.get_json()
+    password = data.get('password', '')
+    
+    # Admin password validation
+    if password == 'admin123':
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Mot de passe incorrect'}), 401
 
 
 @app.route('/student')
@@ -200,6 +222,148 @@ def verify_letter():
         'total_blocks': len(original_blocks),
         'correct_sentence_orders': correct_sentence_orders,
         'all_correct': correct_block_order == len(original_blocks) and correct_sentence_orders == len(original_blocks)
+    })
+
+
+@app.route('/api/timer/set', methods=['POST'])
+def set_timer():
+    """Set the timer duration (admin only)"""
+    global timer_config
+    data = request.get_json()
+    duration = data.get('duration', 300)  # Default 5 minutes
+    
+    if not isinstance(duration, int) or duration < 10:
+        return jsonify({'error': 'Durée invalide (minimum 10 secondes)'}), 400
+    
+    timer_config['duration'] = duration
+    timer_config['started_at'] = None
+    timer_config['is_active'] = False
+    
+    return jsonify({
+        'success': True,
+        'duration': duration
+    })
+
+
+@app.route('/api/timer/start', methods=['POST'])
+def start_timer():
+    """Start the timer (admin only)"""
+    global timer_config, student_scores
+    
+    # Reset student scores when starting a new timer
+    student_scores = {}
+    
+    timer_config['started_at'] = time.time()
+    timer_config['is_active'] = True
+    
+    return jsonify({
+        'success': True,
+        'started_at': timer_config['started_at'],
+        'duration': timer_config['duration']
+    })
+
+
+@app.route('/api/timer/stop', methods=['POST'])
+def stop_timer():
+    """Stop the timer (admin only)"""
+    global timer_config
+    
+    timer_config['is_active'] = False
+    
+    return jsonify({
+        'success': True
+    })
+
+
+@app.route('/api/timer/status', methods=['GET'])
+def get_timer_status():
+    """Get current timer status"""
+    global timer_config
+    
+    remaining = 0
+    if timer_config['is_active'] and timer_config['started_at']:
+        elapsed = time.time() - timer_config['started_at']
+        remaining = max(0, timer_config['duration'] - elapsed)
+        
+        # Auto-stop timer if expired
+        if remaining <= 0:
+            timer_config['is_active'] = False
+    
+    return jsonify({
+        'is_active': timer_config['is_active'],
+        'duration': timer_config['duration'],
+        'remaining': int(remaining),
+        'started_at': timer_config['started_at']
+    })
+
+
+@app.route('/api/score/submit', methods=['POST'])
+def submit_score():
+    """Submit a student's score"""
+    global student_scores, timer_config
+    
+    data = request.get_json()
+    nickname = data.get('nickname', '').strip()
+    score = data.get('score', 0)
+    
+    if not nickname:
+        return jsonify({'error': 'Surnom requis'}), 400
+    
+    # Calculate time taken
+    time_taken = 0
+    if timer_config['started_at']:
+        time_taken = time.time() - timer_config['started_at']
+    
+    # Store or update score (keep best score)
+    if nickname not in student_scores or score > student_scores[nickname]['score']:
+        student_scores[nickname] = {
+            'score': score,
+            'time_taken': time_taken,
+            'completed_at': time.time()
+        }
+    
+    return jsonify({
+        'success': True,
+        'score': score,
+        'time_taken': time_taken
+    })
+
+
+@app.route('/api/leaderboard', methods=['GET'])
+def get_leaderboard():
+    """Get the leaderboard with student scores"""
+    global student_scores
+    
+    # Sort by score (descending), then by time_taken (ascending)
+    sorted_scores = sorted(
+        student_scores.items(),
+        key=lambda x: (-x[1]['score'], x[1]['time_taken'])
+    )
+    
+    leaderboard = [
+        {
+            'rank': i + 1,
+            'nickname': nickname,
+            'score': data['score'],
+            'time_taken': round(data['time_taken'], 1)
+        }
+        for i, (nickname, data) in enumerate(sorted_scores)
+    ]
+    
+    return jsonify({
+        'leaderboard': leaderboard,
+        'total_students': len(student_scores)
+    })
+
+
+@app.route('/api/leaderboard/reset', methods=['POST'])
+def reset_leaderboard():
+    """Reset the leaderboard (admin only)"""
+    global student_scores
+    student_scores = {}
+    
+    return jsonify({
+        'success': True
     })
 
 
