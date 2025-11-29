@@ -566,6 +566,72 @@
                 font-size: 18px;
             }
         }
+
+        /* Student Timer Styles */
+        .student-timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .student-timer-icon {
+            font-size: 24px;
+        }
+
+        .student-timer-value {
+            font-size: 24px;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+            color: var(--dark);
+            min-width: 70px;
+        }
+
+        .student-timer-value.warning {
+            color: #f39c12;
+        }
+
+        .student-timer-value.danger {
+            color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .student-timer-status {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+            padding: 4px 8px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .student-timer-status.active {
+            color: #27ae60;
+            background: #d4edda;
+        }
+
+        .student-timer-status.expired {
+            color: var(--danger);
+            background: #f8d7da;
+        }
+
+        @media (max-width: 768px) {
+            .student-timer {
+                order: 2;
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -576,6 +642,12 @@
                 <span class="navbar-title">Espace Étudiant</span>
                 <span class="navbar-user" id="user-nickname">Bienvenue !</span>
             </div>
+        </div>
+        <!-- Timer Display for Students -->
+        <div class="student-timer" id="student-timer">
+            <span class="student-timer-icon">⏱️</span>
+            <span class="student-timer-value" id="student-timer-value">--:--</span>
+            <span class="student-timer-status" id="student-timer-status">En attente</span>
         </div>
         <a href="/" class="btn-back">← Déconnexion</a>
     </nav>
@@ -963,13 +1035,36 @@
 
                 if (data.error) {
                     showAlert('error', `❌ ${data.error}`);
-                } else if (data.all_correct) {
-                    showAlert('success', `🎉 Parfait ! Tous les blocs sont correctement placés et toutes les phrases sont dans le bon ordre !`);
                 } else {
-                    showAlert('warning', `📊 Résultat : ${data.correct_blocks}/${data.total_blocks} blocs bien placés | ${data.correct_sentence_orders}/${data.total_blocks} ordres de phrases corrects`);
+                    // Calculate score percentage
+                    const blockScore = (data.correct_blocks / data.total_blocks) * 50;
+                    const sentenceScore = (data.correct_sentence_orders / data.total_blocks) * 50;
+                    const totalScore = Math.round(blockScore + sentenceScore);
+
+                    // Submit score to server
+                    await submitScore(totalScore);
+
+                    if (data.all_correct) {
+                        showAlert('success', `🎉 Parfait ! Score: ${totalScore}% - Tous les blocs sont correctement placés et toutes les phrases sont dans le bon ordre !`);
+                    } else {
+                        showAlert('warning', `📊 Score: ${totalScore}% - ${data.correct_blocks}/${data.total_blocks} blocs bien placés | ${data.correct_sentence_orders}/${data.total_blocks} ordres de phrases corrects`);
+                    }
                 }
             } catch (error) {
                 showAlert('error', '❌ Erreur de connexion au serveur.');
+            }
+        }
+
+        async function submitScore(score) {
+            const nickname = getNickname();
+            try {
+                await fetch('/api/score/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nickname, score })
+                });
+            } catch (error) {
+                console.error('Erreur soumission score:', error);
             }
         }
 
@@ -992,6 +1087,55 @@
                 alert.style.display = 'none';
             });
         }
+
+        // Timer functionality
+        let timerCheckInterval = null;
+
+        async function checkTimer() {
+            try {
+                const response = await fetch('/api/timer/status');
+                const data = await response.json();
+
+                const timerValue = document.getElementById('student-timer-value');
+                const timerStatus = document.getElementById('student-timer-status');
+
+                if (data.is_active && data.remaining > 0) {
+                    const mins = Math.floor(data.remaining / 60);
+                    const secs = data.remaining % 60;
+                    timerValue.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                    timerStatus.textContent = 'En cours';
+                    timerStatus.className = 'student-timer-status active';
+
+                    // Add warning/danger classes based on time remaining
+                    timerValue.classList.remove('warning', 'danger');
+                    if (data.remaining <= 30) {
+                        timerValue.classList.add('danger');
+                    } else if (data.remaining <= 60) {
+                        timerValue.classList.add('warning');
+                    }
+                } else if (data.is_active && data.remaining <= 0) {
+                    timerValue.textContent = '00:00';
+                    timerValue.classList.add('danger');
+                    timerStatus.textContent = 'Terminé';
+                    timerStatus.className = 'student-timer-status expired';
+                    showAlert('info', '⏰ Le temps est écoulé ! Votre dernière réponse a été enregistrée.');
+                } else {
+                    timerValue.textContent = '--:--';
+                    timerValue.classList.remove('warning', 'danger');
+                    timerStatus.textContent = 'En attente';
+                    timerStatus.className = 'student-timer-status';
+                }
+            } catch (error) {
+                console.error('Erreur vérification timer:', error);
+            }
+        }
+
+        // Start timer check interval
+        timerCheckInterval = setInterval(checkTimer, 1000);
+
+        // Initial timer check
+        checkTimer();
     </script>
 </body>
 </html>

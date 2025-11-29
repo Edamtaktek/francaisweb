@@ -343,6 +343,141 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Timer Controls Styles */
+        .timer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timer-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timer-input-group label {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .timer-input {
+            width: 100px;
+            padding: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .timer-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .timer-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+        }
+
+        .timer-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--dark);
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-status {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--secondary);
+        }
+
+        .timer-status.active {
+            color: var(--success);
+        }
+
+        .timer-status.expired {
+            color: var(--danger);
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .leaderboard-empty {
+            text-align: center;
+            padding: 30px;
+            color: var(--secondary);
+            font-style: italic;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .leaderboard-table th {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leaderboard-table tr:hover td {
+            background: #f8f9fa;
+        }
+
+        .leaderboard-rank {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .leaderboard-rank.gold {
+            color: #f1c40f;
+        }
+
+        .leaderboard-rank.silver {
+            color: #95a5a6;
+        }
+
+        .leaderboard-rank.bronze {
+            color: #d35400;
+        }
+
+        .leaderboard-score {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .leaderboard-time {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -360,6 +495,15 @@
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .timer-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .timer-display {
+                width: 100%;
             }
         }
     </style>
@@ -450,6 +594,55 @@ Vous trouverez ci-joint mon dossier complet. Votre soutien serait déterminant p
                 </div>
             </div>
         </div>
+
+        <!-- Timer Control Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">⏱️</div>
+                <h2 class="card-title">Contrôle du Chronomètre</h2>
+            </div>
+            <div class="timer-controls">
+                <div class="timer-input-group">
+                    <label for="timer-minutes">Durée (minutes)</label>
+                    <input type="number" id="timer-minutes" value="5" min="1" max="60" class="timer-input">
+                </div>
+                <div class="timer-display" id="timer-display">
+                    <span class="timer-value">--:--</span>
+                    <span class="timer-status" id="timer-status">Inactif</span>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="startTimer()">
+                        <span>▶️</span>
+                        <span>Démarrer</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="stopTimer()">
+                        <span>⏹️</span>
+                        <span>Arrêter</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">🏆</div>
+                <h2 class="card-title">Classement des Étudiants</h2>
+            </div>
+            <div class="leaderboard-controls">
+                <button type="button" class="btn btn-secondary" onclick="refreshLeaderboard()">
+                    <span>🔄</span>
+                    <span>Actualiser</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetLeaderboard()" style="background: #d63031;">
+                    <span>🗑️</span>
+                    <span>Réinitialiser</span>
+                </button>
+            </div>
+            <div id="leaderboard-container">
+                <p class="leaderboard-empty">Aucun score enregistré pour le moment.</p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -527,6 +720,181 @@ Vous trouverez ci-joint mon dossier complet. Votre soutien serait déterminant p
             errorAlert.style.display = 'none';
             statsCard.style.display = 'none';
         }
+
+        // Timer functionality
+        let timerInterval = null;
+
+        async function startTimer() {
+            const minutes = parseInt(document.getElementById('timer-minutes').value) || 5;
+            const duration = minutes * 60;
+
+            try {
+                // Set duration first
+                await fetch('/api/timer/set', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ duration })
+                });
+
+                // Start the timer
+                const response = await fetch('/api/timer/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    startTimerDisplay(duration);
+                }
+            } catch (error) {
+                console.error('Erreur démarrage timer:', error);
+            }
+        }
+
+        function startTimerDisplay(duration) {
+            if (timerInterval) clearInterval(timerInterval);
+
+            let remaining = duration;
+            const timerValue = document.querySelector('.timer-value');
+            const timerStatus = document.getElementById('timer-status');
+
+            timerStatus.textContent = 'Actif';
+            timerStatus.className = 'timer-status active';
+
+            function updateDisplay() {
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                timerValue.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    timerStatus.textContent = 'Terminé';
+                    timerStatus.className = 'timer-status expired';
+                    timerValue.style.color = '#d63031';
+                }
+            }
+
+            updateDisplay();
+
+            timerInterval = setInterval(() => {
+                remaining--;
+                updateDisplay();
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        async function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            try {
+                await fetch('/api/timer/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const timerValue = document.querySelector('.timer-value');
+                const timerStatus = document.getElementById('timer-status');
+                timerValue.textContent = '--:--';
+                timerValue.style.color = '';
+                timerStatus.textContent = 'Arrêté';
+                timerStatus.className = 'timer-status';
+            } catch (error) {
+                console.error('Erreur arrêt timer:', error);
+            }
+        }
+
+        // Leaderboard functionality
+        async function refreshLeaderboard() {
+            try {
+                const response = await fetch('/api/leaderboard');
+                const data = await response.json();
+
+                const container = document.getElementById('leaderboard-container');
+
+                if (!data.leaderboard || data.leaderboard.length === 0) {
+                    container.innerHTML = '<p class="leaderboard-empty">Aucun score enregistré pour le moment.</p>';
+                    return;
+                }
+
+                let html = `
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Étudiant</th>
+                                <th>Score</th>
+                                <th>Temps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.leaderboard.forEach((entry, index) => {
+                    let rankClass = '';
+                    if (index === 0) rankClass = 'gold';
+                    else if (index === 1) rankClass = 'silver';
+                    else if (index === 2) rankClass = 'bronze';
+
+                    const timeFormatted = formatTime(entry.time_taken);
+
+                    html += `
+                        <tr>
+                            <td class="leaderboard-rank ${rankClass}">#${entry.rank}</td>
+                            <td>${escapeHtml(entry.nickname)}</td>
+                            <td class="leaderboard-score">${entry.score}%</td>
+                            <td class="leaderboard-time">${timeFormatted}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Erreur chargement classement:', error);
+            }
+        }
+
+        async function resetLeaderboard() {
+            if (!confirm('Voulez-vous vraiment réinitialiser le classement ?')) return;
+
+            try {
+                await fetch('/api/leaderboard/reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const container = document.getElementById('leaderboard-container');
+                container.innerHTML = '<p class="leaderboard-empty">Aucun score enregistré pour le moment.</p>';
+            } catch (error) {
+                console.error('Erreur réinitialisation classement:', error);
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}m ${secs}s`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-refresh leaderboard every 10 seconds
+        setInterval(refreshLeaderboard, 10000);
+
+        // Initial leaderboard load
+        window.addEventListener('DOMContentLoaded', () => {
+            refreshLeaderboard();
+        });
     </script>
 </body>
 </html>
