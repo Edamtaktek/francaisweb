@@ -748,39 +748,70 @@
         const autoScrollConfig = {
             edgeThreshold: 80,  // Distance from edge to trigger scroll (pixels)
             scrollSpeed: 15,     // Scroll speed (pixels per frame)
-            intervalId: null
+            intensityChangeThreshold: 0.1,  // Minimum intensity change to trigger update
+            animationFrameId: null,
+            scrollDirection: 0,  // -1 for up, 1 for down, 0 for none
+            scrollIntensity: 0,
+            lastUpdate: 0
         };
+
+        // Animation frame-based scrolling for better performance
+        function performAutoScroll() {
+            if (autoScrollConfig.scrollDirection !== 0) {
+                window.scrollBy(0, autoScrollConfig.scrollDirection * autoScrollConfig.scrollSpeed * autoScrollConfig.scrollIntensity);
+                autoScrollConfig.animationFrameId = requestAnimationFrame(performAutoScroll);
+            }
+        }
 
         // Start auto-scrolling when dragging near edges
         function startAutoScroll(e) {
+            // Throttle: only process every 16ms (~60fps)
+            const now = Date.now();
+            if (now - autoScrollConfig.lastUpdate < 16) return;
+            autoScrollConfig.lastUpdate = now;
+            
             const y = e.clientY;
             const viewportHeight = window.innerHeight;
             
-            // Clear any existing scroll interval
-            stopAutoScroll();
+            let newDirection = 0;
+            let newIntensity = 0;
             
             // Check if near top edge
             if (y < autoScrollConfig.edgeThreshold) {
-                const intensity = 1 - (y / autoScrollConfig.edgeThreshold);
-                autoScrollConfig.intervalId = setInterval(() => {
-                    window.scrollBy(0, -autoScrollConfig.scrollSpeed * intensity);
-                }, 16); // ~60fps
+                newDirection = -1;
+                newIntensity = 1 - (y / autoScrollConfig.edgeThreshold);
             }
             // Check if near bottom edge
             else if (y > viewportHeight - autoScrollConfig.edgeThreshold) {
-                const intensity = 1 - ((viewportHeight - y) / autoScrollConfig.edgeThreshold);
-                autoScrollConfig.intervalId = setInterval(() => {
-                    window.scrollBy(0, autoScrollConfig.scrollSpeed * intensity);
-                }, 16); // ~60fps
+                newDirection = 1;
+                newIntensity = 1 - ((viewportHeight - y) / autoScrollConfig.edgeThreshold);
+            }
+            
+            // Only update if direction or intensity changed significantly
+            if (newDirection !== autoScrollConfig.scrollDirection || 
+                Math.abs(newIntensity - autoScrollConfig.scrollIntensity) > autoScrollConfig.intensityChangeThreshold) {
+                autoScrollConfig.scrollDirection = newDirection;
+                autoScrollConfig.scrollIntensity = newIntensity;
+                
+                // Start animation if not already running
+                if (newDirection !== 0 && !autoScrollConfig.animationFrameId) {
+                    autoScrollConfig.animationFrameId = requestAnimationFrame(performAutoScroll);
+                }
+                // Stop animation if no longer needed
+                else if (newDirection === 0) {
+                    stopAutoScroll();
+                }
             }
         }
         
         // Stop auto-scrolling
         function stopAutoScroll() {
-            if (autoScrollConfig.intervalId) {
-                clearInterval(autoScrollConfig.intervalId);
-                autoScrollConfig.intervalId = null;
+            if (autoScrollConfig.animationFrameId) {
+                cancelAnimationFrame(autoScrollConfig.animationFrameId);
+                autoScrollConfig.animationFrameId = null;
             }
+            autoScrollConfig.scrollDirection = 0;
+            autoScrollConfig.scrollIntensity = 0;
         }
 
         // Get nickname from URL or session storage
@@ -911,13 +942,6 @@
                 block.classList.remove('dragging');
                 stopAutoScroll();
             });
-            
-            block.addEventListener('drag', (e) => {
-                // Enable auto-scroll while dragging
-                if (e.clientY !== 0) { // clientY is 0 at the end of drag
-                    startAutoScroll(e);
-                }
-            });
         }
 
         function initializeDragAndDrop() {
@@ -1007,13 +1031,6 @@
                 sentence.addEventListener('dragend', () => {
                     sentence.classList.remove('dragging');
                     stopAutoScroll();
-                });
-                
-                sentence.addEventListener('drag', (e) => {
-                    // Enable auto-scroll while dragging sentences
-                    if (e.clientY !== 0) {
-                        startAutoScroll(e);
-                    }
                 });
             });
 
