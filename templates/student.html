@@ -6,16 +6,17 @@
     <title>Étudiant - Exercice de Lettre</title>
     <style>
         :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --secondary: #95a5a6;
-            --success: #27ae60;
-            --info: #3498db;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
+            --primary: #6C5CE7;
+            --primary-dark: #5849C4;
+            --secondary: #636e72;
+            --success: #00b894;
+            --info: #0984e3;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --light: #dfe6e9;
+            --dark: #2d3436;
             --white: #ffffff;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         * {
@@ -34,43 +35,59 @@
         .navbar {
             background: var(--white);
             padding: 15px 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
             gap: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--dark);
         }
 
         .navbar-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .navbar-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-title {
             font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .navbar-user {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .btn-back {
-            padding: 10px 20px;
-            background: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 22px;
+            background: #f8f9fa;
+            color: var(--dark);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
@@ -79,7 +96,9 @@
         }
 
         .btn-back:hover {
-            background: #7f8c8d;
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
             transform: translateY(-2px);
         }
 
@@ -97,69 +116,71 @@
 
         .card {
             background: var(--white);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light);
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .card-title-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .card-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 22px;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
         }
 
         .card-title {
-            font-size: 20px;
+            font-size: 22px;
             color: var(--dark);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .badge-info {
-            background: #e3f2fd;
-            color: var(--info);
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
         }
 
         .letter-scaffold {
-            background: #f8f9fa;
-            border: 2px dashed var(--light);
-            border-radius: 12px;
-            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #ced4da;
+            border-radius: 16px;
+            padding: 22px;
         }
 
         .scaffold-block {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 2px solid var(--light);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .scaffold-block:last-child {
@@ -169,88 +190,103 @@
         .scaffold-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .scaffold-header h3 {
-            font-size: 16px;
+            font-size: 17px;
             color: var(--dark);
-            font-weight: 600;
+            font-weight: 700;
             flex: 1;
         }
 
         .type-badge {
-            padding: 4px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .type-je {
-            background: #e3f2fd;
-            color: #1976d2;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
         }
 
         .type-nous {
-            background: #f3e5f5;
-            color: #7b1fa2;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            color: #c2185b;
         }
 
         .type-vous {
-            background: #e8f5e9;
-            color: #388e3c;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
         }
 
         .drop-zone {
-            min-height: 120px;
+            min-height: 100px;
             background: #fafafa;
-            border: 2px dashed #cbd5e0;
-            border-radius: 8px;
+            border: 3px dashed #d0d0d0;
+            border-radius: 12px;
             padding: 15px;
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            position: relative;
         }
 
         .drop-zone.drag-over {
-            background: #e3f2fd;
-            border-color: var(--primary);
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-color: var(--success);
             border-style: solid;
+            transform: scale(1.02);
         }
 
         .drop-zone:empty::before {
             content: '📥 Glissez un bloc ici';
             display: block;
             text-align: center;
-            color: var(--secondary);
-            font-size: 14px;
-            padding: 40px 0;
+            color: #999;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 30px 0;
         }
 
         .blocks-pool {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            min-height: 150px;
+            padding: 5px;
+        }
+
+        .blocks-pool-empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 15px;
         }
 
         .draggable-block {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            background: linear-gradient(135deg, #e8f4fd, #d4e9fd);
             border: 2px solid #90caf9;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 14px;
+            padding: 18px;
             cursor: grab;
             transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
         }
 
         .draggable-block:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
         }
 
         .draggable-block:active {
@@ -259,109 +295,149 @@
 
         .draggable-block.dragging {
             opacity: 0.5;
-            transform: scale(0.95);
+            transform: scale(0.96);
+        }
+
+        /* Remove button for blocks */
+        .block-remove-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--danger);
+            color: white;
+            border: 3px solid white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(214, 48, 49, 0.4);
+            z-index: 10;
+        }
+
+        .block-remove-btn:hover {
+            transform: scale(1.15);
+            background: #c0392b;
+        }
+
+        .drop-zone .draggable-block .block-remove-btn {
+            display: flex;
         }
 
         .sentence {
             background: white;
-            padding: 10px 12px;
-            margin: 6px 0;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 2px solid #e8e8e8;
             cursor: grab;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .sentence:hover {
-            background: #f5f5f5;
+            background: #f8f9fa;
             border-color: var(--primary);
+            transform: translateX(3px);
         }
 
         .sentence-number {
-            background: var(--primary);
+            background: var(--gradient);
             color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
             flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(108, 92, 231, 0.3);
         }
 
         .sentence-text {
             flex: 1;
             font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.6;
+            color: #444;
         }
 
         .action-bar {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient);
             color: white;
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.35);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.45);
         }
 
         .btn-success {
-            background: var(--success);
+            background: linear-gradient(135deg, #00b894, #00a085);
             color: white;
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.35);
         }
 
         .btn-success:hover {
-            background: #229954;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.45);
         }
 
         .btn-warning {
-            background: var(--warning);
+            background: linear-gradient(135deg, #fdcb6e, #f0932b);
             color: white;
+            box-shadow: 0 6px 20px rgba(253, 203, 110, 0.35);
         }
 
         .btn-warning:hover {
-            background: #e67e22;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(253, 203, 110, 0.45);
         }
 
         .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-top: 15px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            margin-top: 18px;
             display: none;
-            animation: slideDown 0.3s ease-out;
+            animation: slideDown 0.4s ease-out;
+            font-weight: 600;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-15px);
             }
             to {
                 opacity: 1;
@@ -370,27 +446,27 @@
         }
 
         .alert-success {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #155724;
-            border-left: 4px solid var(--success);
+            border-left: 5px solid var(--success);
         }
 
         .alert-warning {
-            background: #fff3cd;
+            background: linear-gradient(135deg, #fff3cd, #ffeeba);
             color: #856404;
-            border-left: 4px solid var(--warning);
+            border-left: 5px solid #f39c12;
         }
 
         .alert-error {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
             color: #721c24;
-            border-left: 4px solid var(--danger);
+            border-left: 5px solid var(--danger);
         }
 
         .alert-info {
-            background: #d1ecf1;
+            background: linear-gradient(135deg, #d1ecf1, #bee5eb);
             color: #0c5460;
-            border-left: 4px solid var(--info);
+            border-left: 5px solid var(--info);
         }
 
         .loading-overlay {
@@ -399,7 +475,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             display: none;
             align-items: center;
             justify-content: center;
@@ -408,18 +484,19 @@
 
         .loading-content {
             background: white;
-            padding: 40px;
-            border-radius: 15px;
+            padding: 50px;
+            border-radius: 20px;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         .spinner {
-            border: 4px solid var(--light);
-            border-top: 4px solid var(--primary);
+            border: 5px solid #f0f0f0;
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
+            width: 60px;
+            height: 60px;
+            animation: spin 0.8s linear infinite;
             margin: 0 auto 20px;
         }
 
@@ -430,23 +507,33 @@
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 30px;
             color: var(--secondary);
         }
 
         .empty-state-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
+            font-size: 80px;
+            margin-bottom: 25px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
 
         .empty-state-title {
-            font-size: 20px;
+            font-size: 26px;
             color: var(--dark);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 700;
         }
 
         .empty-state-text {
-            font-size: 15px;
+            font-size: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
         @media (max-width: 1200px) {
@@ -459,10 +546,11 @@
             .navbar {
                 flex-direction: column;
                 gap: 15px;
+                text-align: center;
             }
 
             .card {
-                padding: 20px;
+                padding: 22px;
             }
 
             .action-bar {
@@ -473,6 +561,10 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .card-title {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -480,17 +572,20 @@
     <nav class="navbar">
         <div class="navbar-brand">
             <div class="navbar-icon">👨‍🎓</div>
-            <span>Espace Étudiant</span>
+            <div class="navbar-info">
+                <span class="navbar-title">Espace Étudiant</span>
+                <span class="navbar-user" id="user-nickname">Bienvenue !</span>
+            </div>
         </div>
-        <a href="/" class="btn-back">← Retour</a>
+        <a href="/" class="btn-back">← Déconnexion</a>
     </nav>
 
     <div class="container">
         <div id="no-exercise" class="card empty-state">
             <div class="empty-state-icon">📭</div>
             <h2 class="empty-state-title">Aucun exercice disponible</h2>
-            <p class="empty-state-text">Le professeur n'a pas encore créé d'exercice. Veuillez patienter.</p>
-            <button class="btn btn-primary" onclick="loadExercise()" style="margin-top: 20px;">
+            <p class="empty-state-text">Le professeur n'a pas encore créé d'exercice. Veuillez patienter ou cliquer pour recharger.</p>
+            <button class="btn btn-primary" onclick="loadExercise()" style="margin-top: 25px;">
                 <span>🔄</span>
                 <span>Recharger</span>
             </button>
@@ -559,7 +654,9 @@
                         </div>
                         <span class="badge badge-info" id="blocks-count">0 blocs</span>
                     </div>
-                    <div id="blocks-pool" class="blocks-pool"></div>
+                    <div id="blocks-pool" class="blocks-pool">
+                        <div class="blocks-pool-empty">Les blocs apparaîtront ici</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -568,15 +665,24 @@
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-content">
             <div class="spinner"></div>
-            <p style="color: var(--dark); font-weight: 600;">Chargement...</p>
+            <p style="color: var(--dark); font-weight: 700; font-size: 16px;">Chargement de l'exercice...</p>
         </div>
     </div>
 
     <script>
         let exerciseData = null;
 
-        // Load exercise on page load
+        // Get nickname from URL or session storage
+        function getNickname() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nickname = urlParams.get('nickname') || sessionStorage.getItem('nickname') || 'Étudiant';
+            return nickname;
+        }
+
+        // Display nickname in navbar
         window.addEventListener('DOMContentLoaded', () => {
+            const nickname = getNickname();
+            document.getElementById('user-nickname').textContent = `Bienvenue, ${nickname} !`;
             loadExercise();
         });
 
@@ -620,54 +726,85 @@
             blocksCount.textContent = `${blocks.length} blocs`;
 
             blocks.forEach(block => {
-                const blockElement = document.createElement('div');
-                blockElement.className = 'draggable-block';
-                blockElement.dataset.blockId = block.id;
-                blockElement.dataset.blockType = block.type;
-                blockElement.draggable = true;
-
-                block.sentences.forEach((sentence, index) => {
-                    const sentenceEl = document.createElement('div');
-                    sentenceEl.className = 'sentence';
-                    sentenceEl.dataset.sentenceId = sentence.id;
-                    sentenceEl.draggable = true;
-
-                    const numberEl = document.createElement('div');
-                    numberEl.className = 'sentence-number';
-                    numberEl.textContent = index + 1;
-
-                    const textEl = document.createElement('div');
-                    textEl.className = 'sentence-text';
-                    textEl.textContent = sentence.text;
-
-                    sentenceEl.appendChild(numberEl);
-                    sentenceEl.appendChild(textEl);
-                    blockElement.appendChild(sentenceEl);
-                });
-
+                const blockElement = createBlockElement(block);
                 blocksPool.appendChild(blockElement);
             });
 
             initializeDragAndDrop();
         }
 
+        function createBlockElement(block) {
+            const blockElement = document.createElement('div');
+            blockElement.className = 'draggable-block';
+            blockElement.dataset.blockId = block.id;
+            blockElement.dataset.blockType = block.type;
+            blockElement.draggable = true;
+
+            // Add remove button
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'block-remove-btn';
+            removeBtn.innerHTML = '×';
+            removeBtn.title = 'Retirer ce bloc';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeBlockFromZone(block.id);
+            };
+            blockElement.appendChild(removeBtn);
+
+            block.sentences.forEach((sentence, index) => {
+                const sentenceEl = document.createElement('div');
+                sentenceEl.className = 'sentence';
+                sentenceEl.dataset.sentenceId = sentence.id;
+                sentenceEl.draggable = true;
+
+                const numberEl = document.createElement('div');
+                numberEl.className = 'sentence-number';
+                numberEl.textContent = index + 1;
+
+                const textEl = document.createElement('div');
+                textEl.className = 'sentence-text';
+                textEl.textContent = sentence.text;
+
+                sentenceEl.appendChild(numberEl);
+                sentenceEl.appendChild(textEl);
+                blockElement.appendChild(sentenceEl);
+            });
+
+            return blockElement;
+        }
+
+        function removeBlockFromZone(blockId) {
+            const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
+            if (block) {
+                const blocksPool = document.getElementById('blocks-pool');
+                blocksPool.appendChild(block);
+                
+                // Re-initialize drag for this block
+                initializeBlockDrag(block);
+                updateSentenceNumbers();
+            }
+        }
+
+        function initializeBlockDrag(block) {
+            block.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('sentence')) return;
+                e.dataTransfer.setData('blockId', block.dataset.blockId);
+                setTimeout(() => block.classList.add('dragging'), 0);
+            });
+
+            block.addEventListener('dragend', () => {
+                block.classList.remove('dragging');
+            });
+        }
+
         function initializeDragAndDrop() {
             const blocks = document.querySelectorAll('.draggable-block');
-            const sentences = document.querySelectorAll('.sentence');
             const dropZones = document.querySelectorAll('.drop-zone');
             const blocksPool = document.getElementById('blocks-pool');
 
             // Block drag and drop
             blocks.forEach(block => {
-                block.addEventListener('dragstart', (e) => {
-                    if (e.target.classList.contains('sentence')) return;
-                    e.dataTransfer.setData('blockId', block.dataset.blockId);
-                    setTimeout(() => block.classList.add('dragging'), 0);
-                });
-
-                block.addEventListener('dragend', () => {
-                    block.classList.remove('dragging');
-                });
+                initializeBlockDrag(block);
             });
 
             // Drop zones
@@ -693,8 +830,10 @@
                         const existingBlock = zone.querySelector('.draggable-block');
                         if (existingBlock) {
                             blocksPool.appendChild(existingBlock);
+                            initializeBlockDrag(existingBlock);
                         }
                         zone.appendChild(block);
+                        initializeBlockDrag(block);
                         updateSentenceNumbers();
                     }
                 });
@@ -708,15 +847,26 @@
                 const block = document.querySelector(`.draggable-block[data-block-id="${blockId}"]`);
                 if (block) {
                     blocksPool.appendChild(block);
+                    initializeBlockDrag(block);
                     updateSentenceNumbers();
                 }
             });
 
             // Sentence drag and drop within blocks
+            initializeSentenceDrag();
+        }
+
+        function initializeSentenceDrag() {
+            const sentences = document.querySelectorAll('.sentence');
+            const blocks = document.querySelectorAll('.draggable-block');
+
             sentences.forEach(sentence => {
                 sentence.addEventListener('dragstart', (e) => {
                     e.dataTransfer.setData('sentenceId', sentence.dataset.sentenceId);
-                    e.dataTransfer.setData('sourceBlockId', sentence.closest('.draggable-block').dataset.blockId);
+                    const parentBlock = sentence.closest('.draggable-block');
+                    if (parentBlock) {
+                        e.dataTransfer.setData('sourceBlockId', parentBlock.dataset.blockId);
+                    }
                     e.stopPropagation();
                     setTimeout(() => sentence.classList.add('dragging'), 0);
                 });
