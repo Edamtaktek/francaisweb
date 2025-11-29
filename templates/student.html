@@ -743,6 +743,45 @@
 
     <script>
         let exerciseData = null;
+        
+        // Auto-scroll configuration for drag and drop
+        const autoScrollConfig = {
+            edgeThreshold: 80,  // Distance from edge to trigger scroll (pixels)
+            scrollSpeed: 15,     // Scroll speed (pixels per frame)
+            intervalId: null
+        };
+
+        // Start auto-scrolling when dragging near edges
+        function startAutoScroll(e) {
+            const y = e.clientY;
+            const viewportHeight = window.innerHeight;
+            
+            // Clear any existing scroll interval
+            stopAutoScroll();
+            
+            // Check if near top edge
+            if (y < autoScrollConfig.edgeThreshold) {
+                const intensity = 1 - (y / autoScrollConfig.edgeThreshold);
+                autoScrollConfig.intervalId = setInterval(() => {
+                    window.scrollBy(0, -autoScrollConfig.scrollSpeed * intensity);
+                }, 16); // ~60fps
+            }
+            // Check if near bottom edge
+            else if (y > viewportHeight - autoScrollConfig.edgeThreshold) {
+                const intensity = 1 - ((viewportHeight - y) / autoScrollConfig.edgeThreshold);
+                autoScrollConfig.intervalId = setInterval(() => {
+                    window.scrollBy(0, autoScrollConfig.scrollSpeed * intensity);
+                }, 16); // ~60fps
+            }
+        }
+        
+        // Stop auto-scrolling
+        function stopAutoScroll() {
+            if (autoScrollConfig.intervalId) {
+                clearInterval(autoScrollConfig.intervalId);
+                autoScrollConfig.intervalId = null;
+            }
+        }
 
         // Get nickname from URL or session storage
         function getNickname() {
@@ -870,6 +909,14 @@
 
             block.addEventListener('dragend', () => {
                 block.classList.remove('dragging');
+                stopAutoScroll();
+            });
+            
+            block.addEventListener('drag', (e) => {
+                // Enable auto-scroll while dragging
+                if (e.clientY !== 0) { // clientY is 0 at the end of drag
+                    startAutoScroll(e);
+                }
             });
         }
 
@@ -930,6 +977,16 @@
 
             // Sentence drag and drop within blocks
             initializeSentenceDrag();
+            
+            // Add global dragover listener for auto-scroll support anywhere on the page
+            document.addEventListener('dragover', (e) => {
+                startAutoScroll(e);
+            });
+            
+            // Stop auto-scroll when drag ends anywhere
+            document.addEventListener('dragend', () => {
+                stopAutoScroll();
+            });
         }
 
         function initializeSentenceDrag() {
@@ -949,6 +1006,14 @@
 
                 sentence.addEventListener('dragend', () => {
                     sentence.classList.remove('dragging');
+                    stopAutoScroll();
+                });
+                
+                sentence.addEventListener('drag', (e) => {
+                    // Enable auto-scroll while dragging sentences
+                    if (e.clientY !== 0) {
+                        startAutoScroll(e);
+                    }
                 });
             });
 
