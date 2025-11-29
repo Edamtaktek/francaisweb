@@ -6,15 +6,17 @@
     <title>Connexion - Exercice de Lettre</title>
     <style>
         :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --secondary: #6c757d;
-            --success: #28a745;
-            --danger: #dc3545;
+            --primary: #6C5CE7;
+            --primary-dark: #5849C4;
+            --secondary: #636e72;
+            --success: #00b894;
+            --danger: #d63031;
             --light: #f8f9fa;
-            --dark: #343a40;
+            --dark: #2d3436;
             --white: #ffffff;
             --shadow: rgba(0, 0, 0, 0.1);
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #6C5CE7 0%, #a55eea 100%);
         }
 
         * {
@@ -25,7 +27,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-1);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -35,93 +37,175 @@
 
         .login-container {
             background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
             padding: 50px;
-            max-width: 500px;
+            max-width: 480px;
             width: 100%;
-            animation: slideIn 0.5s ease-out;
+            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-40px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
         }
 
         .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 90px;
+            height: 90px;
+            background: var(--gradient-2);
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 45px;
             color: white;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+            animation: pulse 2s infinite;
         }
 
         h1 {
             color: var(--dark);
             text-align: center;
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 30px;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
         .subtitle {
             text-align: center;
             color: var(--secondary);
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             font-size: 16px;
+        }
+
+        /* Kahoot-style nickname input */
+        .nickname-section {
+            margin-bottom: 30px;
+        }
+
+        .nickname-section label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nickname-input {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .nickname-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.15);
+        }
+
+        .nickname-input::placeholder {
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .nickname-input.error {
+            border-color: var(--danger);
+            animation: shake 0.4s ease;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
         }
 
         .role-selection {
             display: grid;
-            gap: 20px;
+            gap: 15px;
         }
 
         .role-card {
-            padding: 30px;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
+            padding: 22px 25px;
+            border: 3px solid #e8e8e8;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 18px;
             background: var(--white);
         }
 
         .role-card:hover {
             border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(108, 92, 231, 0.2);
         }
 
         .role-card.professor:hover {
             border-color: #e74c3c;
-            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.2);
+            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.2);
+        }
+
+        .role-card.selected {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.05);
+        }
+
+        .role-card.professor.selected {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
         }
 
         .role-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 15px;
-            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 28px;
             color: white;
+            flex-shrink: 0;
         }
 
         .role-card.professor .role-icon {
@@ -129,35 +213,89 @@
         }
 
         .role-card.student .role-icon {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient-2);
+        }
+
+        .role-info {
+            flex: 1;
         }
 
         .role-card h2 {
             color: var(--dark);
-            font-size: 22px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
 
         .role-card p {
             color: var(--secondary);
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .join-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            background: var(--gradient-2);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.35);
+        }
+
+        .join-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(108, 92, 231, 0.45);
+        }
+
+        .join-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .join-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .footer {
             text-align: center;
             margin-top: 30px;
             color: var(--secondary);
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
         }
 
         @media (max-width: 600px) {
             .login-container {
-                padding: 30px;
+                padding: 35px 25px;
+                border-radius: 20px;
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 26px;
+            }
+
+            .nickname-input {
+                font-size: 18px;
+                padding: 15px;
+            }
+
+            .role-card {
+                padding: 18px;
             }
         }
     </style>
@@ -167,22 +305,44 @@
         <div class="logo">
             <div class="logo-icon">📝</div>
             <h1>Exercice de Lettre</h1>
-            <p class="subtitle">Choisissez votre rôle pour commencer</p>
+            <p class="subtitle">Entrez votre surnom pour rejoindre</p>
+        </div>
+
+        <div class="nickname-section">
+            <label>Votre surnom</label>
+            <input 
+                type="text" 
+                id="nickname" 
+                class="nickname-input" 
+                placeholder="Ex: Marie, Ahmed, Lucas..."
+                maxlength="20"
+                autocomplete="off"
+                autofocus
+            >
+            <p class="error-message" id="error-message">Veuillez entrer un surnom</p>
         </div>
 
         <div class="role-selection">
-            <div class="role-card professor" onclick="selectRole('professor')">
+            <div class="role-card professor" onclick="selectRole('professor')" id="professor-card">
                 <div class="role-icon">👨‍🏫</div>
-                <h2>Professeur</h2>
-                <p>Créez et gérez les exercices de lettre pour vos étudiants</p>
+                <div class="role-info">
+                    <h2>Professeur</h2>
+                    <p>Créez les exercices pour vos étudiants</p>
+                </div>
             </div>
 
-            <div class="role-card student" onclick="selectRole('student')">
+            <div class="role-card student selected" onclick="selectRole('student')" id="student-card">
                 <div class="role-icon">👨‍🎓</div>
-                <h2>Étudiant</h2>
-                <p>Réalisez l'exercice en organisant les blocs et phrases de la lettre</p>
+                <div class="role-info">
+                    <h2>Étudiant</h2>
+                    <p>Participez à l'exercice de la lettre</p>
+                </div>
             </div>
         </div>
+
+        <button class="join-btn" id="join-btn" onclick="joinSession()">
+            🚀 Rejoindre
+        </button>
 
         <div class="footer">
             <p>© 2025 - Application pédagogique</p>
@@ -190,22 +350,67 @@
     </div>
 
     <script>
-        function selectRole(role) {
-            // Add animation before redirect
-            const cards = document.querySelectorAll('.role-card');
-            cards.forEach(card => {
-                if (card.classList.contains(role)) {
-                    card.style.transform = 'scale(0.95)';
-                }
-            });
+        let selectedRole = 'student';
 
-            // Redirect after short delay
-            setTimeout(() => {
-                window.location.href = `/${role}`;
-            }, 200);
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // Update card selection styles
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(role + '-card').classList.add('selected');
         }
 
-        // Add keyboard navigation
+        function joinSession() {
+            const nickname = document.getElementById('nickname').value.trim();
+            const nicknameInput = document.getElementById('nickname');
+            const errorMessage = document.getElementById('error-message');
+
+            // Validate nickname
+            if (!nickname || nickname.length < 2) {
+                nicknameInput.classList.add('error');
+                errorMessage.textContent = 'Le surnom doit contenir au moins 2 caractères';
+                errorMessage.classList.add('visible');
+                
+                setTimeout(() => {
+                    nicknameInput.classList.remove('error');
+                }, 400);
+                return;
+            }
+
+            // Hide error
+            errorMessage.classList.remove('visible');
+            nicknameInput.classList.remove('error');
+
+            // Store nickname in session storage
+            sessionStorage.setItem('nickname', nickname);
+            sessionStorage.setItem('role', selectedRole);
+
+            // Add animation and redirect
+            const joinBtn = document.getElementById('join-btn');
+            joinBtn.innerHTML = '⏳ Connexion...';
+            joinBtn.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = `/${selectedRole}?nickname=${encodeURIComponent(nickname)}`;
+            }, 300);
+        }
+
+        // Handle Enter key
+        document.getElementById('nickname').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                joinSession();
+            }
+        });
+
+        // Clear error on input
+        document.getElementById('nickname').addEventListener('input', () => {
+            document.getElementById('error-message').classList.remove('visible');
+            document.getElementById('nickname').classList.remove('error');
+        });
+
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === '1') selectRole('professor');
             if (e.key === '2') selectRole('student');
