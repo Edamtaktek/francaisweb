@@ -751,6 +751,10 @@
             return nickname;
         }
 
+        // Scoring constants
+        const BLOCK_ORDER_WEIGHT = 50;  // 50% of score for correct block order
+        const SENTENCE_ORDER_WEIGHT = 50;  // 50% of score for correct sentence order
+
         // Display nickname in navbar
         window.addEventListener('DOMContentLoaded', () => {
             const nickname = getNickname();
@@ -1036,9 +1040,9 @@
                 if (data.error) {
                     showAlert('error', `❌ ${data.error}`);
                 } else {
-                    // Calculate score percentage
-                    const blockScore = (data.correct_blocks / data.total_blocks) * 50;
-                    const sentenceScore = (data.correct_sentence_orders / data.total_blocks) * 50;
+                    // Calculate score percentage using defined weights
+                    const blockScore = (data.correct_blocks / data.total_blocks) * BLOCK_ORDER_WEIGHT;
+                    const sentenceScore = (data.correct_sentence_orders / data.total_blocks) * SENTENCE_ORDER_WEIGHT;
                     const totalScore = Math.round(blockScore + sentenceScore);
 
                     // Submit score to server

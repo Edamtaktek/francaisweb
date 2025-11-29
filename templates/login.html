@@ -365,7 +365,6 @@
 
     <script>
         let selectedRole = 'student';
-        const ADMIN_PASSWORD = 'admin123';
 
         function selectRole(role) {
             selectedRole = role;
@@ -385,7 +384,7 @@
             }
         }
 
-        function joinSession() {
+        async function joinSession() {
             const nickname = document.getElementById('nickname').value.trim();
             const nicknameInput = document.getElementById('nickname');
             const errorMessage = document.getElementById('error-message');
@@ -406,25 +405,38 @@
             errorMessage.classList.remove('visible');
             nicknameInput.classList.remove('error');
 
-            // Validate admin password if professor role selected
+            // Validate admin password if professor role selected (server-side)
             if (selectedRole === 'professor') {
                 const adminPassword = document.getElementById('admin-password').value;
                 const passwordInput = document.getElementById('admin-password');
                 const passwordError = document.getElementById('password-error-message');
                 
-                if (adminPassword !== ADMIN_PASSWORD) {
-                    passwordInput.classList.add('error');
-                    passwordError.classList.add('visible');
+                try {
+                    const response = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: adminPassword })
+                    });
                     
-                    setTimeout(() => {
-                        passwordInput.classList.remove('error');
-                    }, 400);
+                    if (!response.ok) {
+                        passwordInput.classList.add('error');
+                        passwordError.classList.add('visible');
+                        
+                        setTimeout(() => {
+                            passwordInput.classList.remove('error');
+                        }, 400);
+                        return;
+                    }
+                    
+                    // Hide password error
+                    passwordError.classList.remove('visible');
+                    passwordInput.classList.remove('error');
+                } catch (error) {
+                    passwordInput.classList.add('error');
+                    passwordError.textContent = 'Erreur de connexion au serveur';
+                    passwordError.classList.add('visible');
                     return;
                 }
-                
-                // Hide password error
-                passwordError.classList.remove('visible');
-                passwordInput.classList.remove('error');
             }
 
             // Store nickname in session storage

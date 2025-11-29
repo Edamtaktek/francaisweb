@@ -725,7 +725,7 @@ Vous trouverez ci-joint mon dossier complet. Votre soutien serait déterminant p
         let timerInterval = null;
 
         async function startTimer() {
-            const minutes = parseInt(document.getElementById('timer-minutes').value) || 5;
+            const minutes = parseInt(document.getElementById('timer-minutes').value, 10) || 5;
             const duration = minutes * 60;
 
             try {

@@ -119,6 +119,19 @@ def professor():
     return render_template('professor.html')
 
 
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    """Validate admin password"""
+    data = request.get_json()
+    password = data.get('password', '')
+    
+    # Admin password validation
+    if password == 'admin123':
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'Mot de passe incorrect'}), 401
+
+
 @app.route('/student')
 def student():
     return render_template('student.html')
